@@ -3,10 +3,8 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
@@ -23,5 +21,17 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Test with Maven
+      run: mvn test
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Test-Results
+        path: test-results
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2.0.0
+      if: always()
+      with:
+        junit_files: "test-results/**/*.xml"
+    
 
    
