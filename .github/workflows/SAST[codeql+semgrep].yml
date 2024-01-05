@@ -8,8 +8,7 @@ on:
 jobs:
   analyze:
     name: Analyze CodeQL
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on:  ubuntu-latest
     permissions:
       actions: read
       contents: read
@@ -61,10 +60,11 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+        output: ${{github.workspace}}/codeql/results/codeql.sarif
         
     - name: Upload analysis results to GitHub Security tab
       if: always()
       uses: github/codeql-action/upload-sarif@v2.1.28
       with:
-         sarif_file: results.sarif
+         sarif_file: ${{github.workspace}}/codeql/results/codeql.sarif
          category: "/language:${{matrix.language}}"
