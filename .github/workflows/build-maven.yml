@@ -26,6 +26,7 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Test with Maven
       run: mvn test
+    - run: mkdir test-results && cp target/*-reports/TEST-*.xml test-results
     - uses: actions/upload-artifact@v3
       with:
         name: Test-Results
