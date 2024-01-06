@@ -86,7 +86,7 @@ jobs:
     steps:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
-      - run: semgrep ci -o results.sarif --sarif || true
+      - run: semgrep ci -o ${{github.workspace}}/results.sarif --sarif || true
       - name: Upload Semgrep Report
         uses: actions/upload-artifact@v3.1.0
         if: always()
