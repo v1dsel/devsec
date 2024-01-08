@@ -1,0 +1,37 @@
+name: Main CI / CD Pipeline
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+  workflow_dispatch:
+  
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build-maven.yml
+    secrets: inherit 
+    
+  sast:
+    needs: build
+    name: SAST
+    uses: ./.github/workflows/SAST[CodeQL+Semgrep].yml
+    secrets: inherit
+
+  
+
+  docker:
+    needs: build
+    name: Build docker image
+    uses: ./.github/workflows/docker-image.yml
+    secrets: inherit
+
+
+  dast:
+    needs: [build,docker]
+    name: DAST Scan
+    uses: ./.github/workflows/DAST.yml
+    secrets: inherit
+    with:
+      image-tag: ${{ needs.docker.outputs.image-tag }}
