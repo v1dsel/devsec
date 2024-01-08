@@ -19,7 +19,6 @@ jobs:
     uses: ./.github/workflows/SAST[CodeQL+Semgrep].yml
     secrets: inherit
 
-  
 
   docker:
     needs: build
